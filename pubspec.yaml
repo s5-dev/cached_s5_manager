@@ -1,8 +1,8 @@
 name: cached_s5_manager
 description: A cache manager for cached_s5 libraries.
-repository:
-homepage:
-version: 0.0.1
+repository: https://github.com/s5-dev/cached_s5_manager
+homepage: https://github.com/s5-dev/cached_s5_manager
+version: 0.0.2
 
 environment:
   sdk: ^3.4.4
