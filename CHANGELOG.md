@@ -1,3 +1,8 @@
+## 1.0.0
+
+- Migrate to downloading from S5 directly in this codebase with `getBytesFromCID`
+- Refactor `clearCache()` to `clear()`.
+
 ## 0.0.2
 
 - Update metadata.

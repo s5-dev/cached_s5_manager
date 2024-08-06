@@ -1,10 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:s5/s5.dart';
 import 'package:universal_io/io.dart';
 
 class CachedS5Manager {
+  final S5 s5;
   Directory? cacheDir;
-  CachedS5Manager();
+  CachedS5Manager({required this.s5});
   // TODO: Add max cache size
 
   /// Initializes the cache dir, nothing else will work unless you do this first.
@@ -14,13 +17,43 @@ class CachedS5Manager {
     await cacheDir?.create(recursive: true);
   }
 
-  /// Given a [compliant](https://docs.sfive.net/spec/blobs.html) CID string, it will fetch that
-  /// asset and then cache it locally.
-  File? getCacheFile(String cid) {
+  /// Given a [compliant](https://docs.sfive.net/spec/blobs.html) CID string, it fetches and
+  /// caches that assets.
+  /// NOTE: Because of limitations, this will skip the caching section if
+  /// it is running from the web
+  Future<Uint8List> getBytesFromCID(
+      String cid, S5 s5, CachedS5Manager cacheManager) async {
+    // check for local existance of the file
+    if (!kIsWeb) {
+      try {
+        // only inits if cache dir is empty
+        (cacheDir == null) ? await cacheManager.init() : null;
+        File cidCache = await cacheManager.getCacheFile(cid);
+        if (cidCache.existsSync()) {
+          return cidCache.readAsBytesSync();
+        } else {
+          final Uint8List cidContents =
+              await s5.api.downloadRawFile(CID.decode(cid).hash);
+          if (cidContents.isNotEmpty) {
+            await cidCache.writeAsBytes(cidContents);
+            return cidContents;
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+    // if not, return the web fetched version
+    return s5.api.downloadRawFile(CID.decode(cid).hash);
+  }
+
+  /// Grabs the local cache file.
+  Future<File> getCacheFile(String cid) async {
     if (cacheDir != null) {
       return File(join(cacheDir!.path, cid));
     } else {
-      return null;
+      await init();
+      return File(join(cacheDir!.path, cid));
     }
     // TODO: Add automatic cache prune based on max size & oldest files
   }

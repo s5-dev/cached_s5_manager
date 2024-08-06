@@ -1,15 +1,18 @@
 name: cached_s5_manager
-description: A cache manager for cached_s5 libraries.
+description: A cache manager for cached_s5 libraries. It handles downloading & caching from an s5 object.
 repository: https://github.com/s5-dev/cached_s5_manager
 homepage: https://github.com/s5-dev/cached_s5_manager
-version: 0.0.2
+version: 1.0.0
 
 environment:
   sdk: ^3.4.4
 
 dependencies:
+  flutter:
+    sdk: flutter
   path: ^1.9.0
   path_provider: ^2.1.4
+  s5: ^0.2.0
   universal_io: ^2.2.2
 
 dev_dependencies:
