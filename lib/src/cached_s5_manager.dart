@@ -21,14 +21,13 @@ class CachedS5Manager {
   /// caches that assets.
   /// NOTE: Because of limitations, this will skip the caching section if
   /// it is running from the web
-  Future<Uint8List> getBytesFromCID(
-      String cid, S5 s5, CachedS5Manager cacheManager) async {
+  Future<Uint8List> getBytesFromCID(String cid) async {
     // check for local existance of the file
     if (!kIsWeb) {
       try {
         // only inits if cache dir is empty
-        (cacheDir == null) ? await cacheManager.init() : null;
-        File cidCache = await cacheManager.getCacheFile(cid);
+        (cacheDir == null) ? await init() : null;
+        File cidCache = await getCacheFile(cid);
         if (cidCache.existsSync()) {
           return cidCache.readAsBytesSync();
         } else {
