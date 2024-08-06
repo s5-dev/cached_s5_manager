@@ -26,7 +26,7 @@ class CachedS5Manager {
   }
 
   /// This deletes the entire local cache.
-  Future<void> clearCache() async {
+  Future<void> clear() async {
     await cacheDir?.delete(recursive: true);
   }
 
