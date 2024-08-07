@@ -26,7 +26,7 @@ class CachedS5Manager {
     if (!kIsWeb) {
       try {
         // only inits if cache dir is empty
-        (cacheDir == null) ? await init() : null;
+        (cacheDir == null || !cacheDir!.existsSync()) ? await init() : null;
         File cidCache = await getCacheFile(cid);
         if (cidCache.existsSync()) {
           return cidCache.readAsBytesSync();
@@ -54,7 +54,7 @@ class CachedS5Manager {
     if (!kIsWeb) {
       try {
         // only inits if cache dir is empty
-        (cacheDir == null) ? await init() : null;
+        (cacheDir == null || !cacheDir!.existsSync()) ? await init() : null;
         File cidCache = await getCacheFile(cid);
         if (cidCache.existsSync()) {
           return cidCache;

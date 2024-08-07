@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Add check to make sure cacheDir exists before creating CID file.
+
 ## 1.2.0
 
 - Add function `getFileFromCID` for larger files that shouldn't be handled in memory.
