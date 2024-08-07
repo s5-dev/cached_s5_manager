@@ -46,6 +46,35 @@ class CachedS5Manager {
     return s5.api.downloadRawFile(CID.decode(cid).hash);
   }
 
+  /// Given a [compliant](https://docs.sfive.net/spec/blobs.html) CID string, it fetches and
+  /// caches that assets.
+  /// NOTE: Because of limitations, this will NOT WORK on web
+  Future<File?> getFileFromCID(String cid) async {
+    // check for local existance of the file
+    if (!kIsWeb) {
+      try {
+        // only inits if cache dir is empty
+        (cacheDir == null) ? await init() : null;
+        File cidCache = await getCacheFile(cid);
+        if (cidCache.existsSync()) {
+          return cidCache;
+        } else {
+          final Uint8List cidContents =
+              await s5.api.downloadRawFile(CID.decode(cid).hash);
+          if (cidContents.isNotEmpty) {
+            await cidCache.writeAsBytes(cidContents);
+            return cidCache;
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      throw UnimplementedError();
+    }
+    return null;
+  }
+
   /// Grabs the local cache file.
   Future<File> getCacheFile(String cid) async {
     if (cacheDir != null) {

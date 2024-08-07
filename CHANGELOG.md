@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Add function `getFileFromCID` for larger files that shouldn't be handled in memory.
+
 ## 1.1.0
 
 - Remove redundant arguments in `getBytesFromCID`.

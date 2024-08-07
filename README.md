@@ -4,6 +4,8 @@ This is a simple cache manager for `cached_s5` libraries.
 
 This is a library built on [s5](https://pub.dev/packages/s5). See there for more details.
 
+Basic Usage:
+
 ```dart
 CachedS5Manager cacheManager = CachedS5Manager(s5: s5);
 final Uint8List bytes = await cacheManager.getBytesFromCID("CID String"); // fetches & caches
