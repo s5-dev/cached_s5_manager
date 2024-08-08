@@ -1,3 +1,7 @@
+## 1.2.3
+
+- chore: specify webs support in pubspec
+
 ## 1.2.2
 
 - fix: make sure init() is skipped on web to not get unimplemented errors
