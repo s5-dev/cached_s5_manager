@@ -1,3 +1,7 @@
+## 1.2.2
+
+- fix: make sure init() is skipped on web to not get unimplemented errors
+
 ## 1.2.1
 
 - Add check to make sure cacheDir exists before creating CID file.

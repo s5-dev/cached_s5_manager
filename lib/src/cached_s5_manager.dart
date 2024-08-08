@@ -12,9 +12,16 @@ class CachedS5Manager {
 
   /// Initializes the cache dir, nothing else will work unless you do this first.
   Future<void> init() async {
-    cacheDir = Directory(
-        join((await getApplicationCacheDirectory()).path, "cid-cache"));
-    await cacheDir?.create(recursive: true);
+    if (!kIsWeb) {
+      cacheDir = Directory(
+          join((await getApplicationCacheDirectory()).path, "cid-cache"));
+      await cacheDir?.create(recursive: true);
+    } else {
+      // If this function gets called in web nothing should happen
+      // Caching doesn't happen so any functions with `cacheDir` should be skipped
+      // and the file will be streamed/held in memory.
+      // It's not a perfect solution, but web is quite restrictive so it's all I got.
+    }
   }
 
   /// Given a [compliant](https://docs.sfive.net/spec/blobs.html) CID string, it fetches and
@@ -70,12 +77,14 @@ class CachedS5Manager {
         print(e);
       }
     } else {
+      // Files are NOT implemented on web.
       throw UnimplementedError();
     }
     return null;
   }
 
   /// Grabs the local cache file.
+  /// This should NOT get called on web or things will break.
   Future<File> getCacheFile(String cid) async {
     if (cacheDir != null) {
       return File(join(cacheDir!.path, cid));
